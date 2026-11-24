@@ -191,7 +191,7 @@ pip install -r requirements.txt
 ### Executar a API
 
 ```bash
-uvicorn app.main:app --reload
+python -m uvicorn app.main:app --reload
 ```
 
 A API ficará disponível em:
@@ -230,6 +230,8 @@ Antes de uma utilização em ambiente produtivo, recomenda-se realizar monitoram
 Também é importante considerar que os resultados obtidos dependem da qualidade, representatividade e atualidade da base utilizada.
 
 ## 11. Autor
+
+Stéfano Vicente Laurito
 
 Projeto desenvolvido como parte do SCTEC Aperfeiçoar — Integração de Inteligência Artificial com Dados.
 
