@@ -1,11 +1,11 @@
 from pathlib import Path
+from src.features import criar_features
 
 import joblib
 import pandas as pd
 
 from fastapi import FastAPI
-from pydantic import BaseModel, Field
-
+from app.schemas import Cliente
 
 # =========================================================
 # CONFIGURAÇÃO E CARREGAMENTO DO MODELO
@@ -32,25 +32,6 @@ app = FastAPI(
 
 
 # =========================================================
-# SCHEMA DE ENTRADA
-# =========================================================
-
-class Cliente(BaseModel):
-    person_age: int = Field(ge=18, le=100)
-    person_income: float = Field(gt=0)
-    person_emp_length: float | None = Field(default=None, ge=0, le=60)
-
-    loan_amnt: float = Field(gt=0)
-    loan_int_rate: float | None = Field(default=None, ge=0)
-
-    cb_person_cred_hist_length: float = Field(ge=0)
-
-    person_home_ownership: str
-    loan_intent: str
-    cb_person_default_on_file: str
-
-
-# =========================================================
 # HEALTH CHECK
 # =========================================================
 
@@ -72,12 +53,9 @@ def predict(cliente: Cliente):
 
     dados = cliente.model_dump()
 
-    # Engenharia de atributo
-    dados["comprometimento_renda"] = (
-        dados["loan_amnt"] / dados["person_income"]
-    ) * 100
-
+    # Engenharia de atributos
     entrada = pd.DataFrame([dados])
+    entrada = criar_features(entrada)
 
     # Probabilidade de inadimplência
     probabilidade = float(
@@ -101,6 +79,12 @@ def predict(cliente: Cliente):
     else:
         faixa_risco = "Elevado"
 
+    acao_recomendada = (
+        "Encaminhar para análise de crédito aprofundada"
+        if previsao == 1
+        else "Prosseguir para avaliação conforme política de crédito"
+    )
+
     return {
         "probabilidade_inadimplencia": round(probabilidade, 4),
         "percentual_risco": round(probabilidade * 100, 2),
@@ -108,6 +92,7 @@ def predict(cliente: Cliente):
         "threshold": THRESHOLD,
         "classificacao": classificacao,
         "predicao": previsao,
+        "acao_recomendada": acao_recomendada,
         "mensagem": (
             f"Cliente classificado como {classificacao.lower()}, "
             f"com risco indicativo {faixa_risco.lower()}."

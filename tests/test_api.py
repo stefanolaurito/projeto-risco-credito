@@ -116,6 +116,7 @@ def test_predict_cliente_baixo_risco():
     assert dados["predicao"] == 0
     assert dados["classificacao"] == "Adimplente"
     assert dados["faixa_risco"] == "Baixo"
+    assert dados["acao_recomendada"] == "Prosseguir para avaliação conforme política de crédito"
 
 
 
@@ -143,3 +144,4 @@ def test_predict_cliente_alto_risco():
     assert dados["predicao"] == 1
     assert dados["classificacao"] == "Inadimplente"
     assert dados["faixa_risco"] == "Elevado"
+    assert dados["acao_recomendada"] == "Encaminhar para análise de crédito aprofundada"

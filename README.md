@@ -42,11 +42,11 @@ A proposta é fornecer uma estimativa estatística que possa apoiar a análise d
 
 ## 4. Estrutura do projeto
 
-```text
 projeto-risco-credito/
 │
 ├── app/
-│   └── main.py
+│   ├── main.py
+│   └── schemas.py
 │
 ├── base/
 │   └── credit_risk_dataset.csv
@@ -58,6 +58,7 @@ projeto-risco-credito/
 │   └── 01_eda.ipynb
 │
 ├── src/
+│   ├── __init__.py
 │   ├── features.py
 │   ├── preprocessing.py
 │   └── model_training.py
@@ -68,7 +69,6 @@ projeto-risco-credito/
 ├── .gitignore
 ├── README.md
 └── requirements.txt
-```
 
 ## 5. Análise exploratória dos dados (EDA)
 
@@ -323,6 +323,7 @@ Recebe os dados de um cliente e retorna:
 - Faixa indicativa de risco.
 - Threshold utilizado.
 - Classificação prevista.
+- Ação recomendada conforme a classificação de risco.
 - Mensagem explicativa.
 
 A API também realiza validações dos dados de entrada utilizando Pydantic.
